@@ -1,20 +1,39 @@
 import { expect, test } from "@playwright/test";
 
 test("has title", async ({ page }) => {
-	await page.goto("");
+	await page.goto("http://localhost:5173/");
 
-	// Expect a title "to contain" a substring.
-	await expect(page).toHaveTitle(/Playwright/);
-});
+	await page.getByLabel("Title").click();
+	await page.getByLabel("Title").fill("My cool title");
+	await page.getByLabel("Title").press("Tab");
+	await page.getByLabel("Description").fill("My great description");
+	await page.getByLabel("Description").press("Enter");
 
-test("get started link", async ({ page }) => {
-	await page.goto("https://playwright.dev/");
-
-	// Click the get started link.
-	await page.getByRole("link", { name: "Get started" }).click();
-
-	// Expects page to have a heading with the name of Installation.
+	await expect(page.locator("#root")).toContainText("My cool title");
+	await expect(page.locator("#root")).toContainText("My great description");
 	await expect(
-		page.getByRole("heading", { name: "Installation" }),
-	).toBeVisible();
+		page
+			.locator("div")
+			.filter({ hasText: /^My cool titleDone Delete$/ })
+			.getByLabel("Done"),
+	).not.toBeChecked();
+
+	await page
+		.locator("div")
+		.filter({ hasText: /^My cool titleDone Delete$/ })
+		.getByLabel("Done")
+		.check();
+
+	await expect(
+		page
+			.locator("div")
+			.filter({ hasText: /^My cool titleDone Delete$/ })
+			.getByLabel("Done"),
+	).toBeChecked();
+
+	await page
+		.locator("div")
+		.filter({ hasText: /^My cool titleDone Delete$/ })
+		.getByRole("button")
+		.click();
 });
