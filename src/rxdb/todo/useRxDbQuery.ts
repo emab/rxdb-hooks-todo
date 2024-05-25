@@ -4,29 +4,29 @@ import type { RxDatabase } from "rxdb";
 import type { Observable } from "rxjs";
 
 export const useRxDbQuery = <D extends RxDatabase, T>(
-	query: (database: D) => Observable<T>,
-	initialValue?: T,
+  query: (database: D) => Observable<T>,
+  initialValue?: T,
 ) => {
-	const database = useRxDb();
+  const database = useRxDb();
 
-	const [data, setData] = useState<T | undefined>(initialValue);
+  const [data, setData] = useState<T | undefined>(initialValue);
 
-	useEffect(() => {
-		const query$ = query(database as unknown as D);
+  useEffect(() => {
+    const query$ = query(database as unknown as D);
 
-		const subscription = query$.subscribe({
-			next: (data) => {
-				setData(data);
-			},
-			error: (error) => {
-				console.error("Error:", error);
-			},
-		});
+    const subscription = query$.subscribe({
+      next: (data) => {
+        setData(data);
+      },
+      error: (error) => {
+        console.error("Error:", error);
+      },
+    });
 
-		return () => {
-			subscription.unsubscribe();
-		};
-	}, [database, query]);
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [database, query]);
 
-	return data;
+  return data;
 };

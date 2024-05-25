@@ -5,9 +5,9 @@ import { initDb } from "./rxdb";
 const database = await initDb();
 
 export function App() {
-	return (
-		<RxProvider value={database}>
-			<Todo />
-		</RxProvider>
-	);
+  return (
+    <RxProvider value={database}>
+      <Todo />
+    </RxProvider>
+  );
 }
